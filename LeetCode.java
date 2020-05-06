@@ -1,14 +1,8 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -17,6 +11,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -2842,35 +2837,201 @@ public class LeetCode {
 					System.out.println(entry.getKey());
 				}
 			}
+			private final String romanOrder ="MDCLXVI";
+			private final Integer[] value= {1000,500,100,50,10,5,1}; 
+			public int romanToInt(String s) {
+				char[] chars = s.toCharArray();
+				int result = 0;
+				int prevIndex = -1;
+				int length = chars.length;
+				
+				for(int i = 0 ; i < length ; i++) {
+					char ch = chars[i];
+					int index = romanOrder.indexOf(ch);
+					int currValue = index!=-1?value[index]:0;
+					if(prevIndex>index) 
+						result -= (2*value[prevIndex]);
+				
+					result += currValue;
+					
+					//System.out.println(ch+""+result);
+					prevIndex = index!=-1?index:-1;
+				}
+				
+				//System.out.println(result);
+				return result;
+			}
+			public String longestCommonPrefix(String[] strs) {
+		     Arrays.sort(strs);
+		     
+		     String commonPrefix = "";
+		     for(int i = 0 ; i < strs[0].length();i++) {
+		    	 char ch = strs[0].charAt(i);
+		    	 commonPrefix += ch;
+		    	 for(int j=1;j<strs.length;j++) {
+		    		 if(!strs[j].startsWith(commonPrefix))
+		    			 return commonPrefix.substring(0,commonPrefix.length()-1);
+		    	 }
+		     }
+		     return commonPrefix;
+		    }
+			
+			
+			public List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
+				List<Boolean> list = new ArrayList<Boolean>();
+				if(candies == null|| candies.length ==0)
+					return list;
+				
+				int max = Integer.MIN_VALUE;
+				for(int i=0;i<candies.length;i++)
+					if(max<candies[i])
+						max = candies[i];
+				
+				for(int i=0;i<candies.length;i++) {
+					if(candies[i]+extraCandies >= max)
+						list.add(true);
+					else
+						list.add(false);
+				}
+					
+				return list;
+		    }
+			
+			public int findMaxConsecutiveOnes(int[] nums) {
+		        if(nums==null || nums.length == 0)
+		            return 0;
+		        
+		        int max= 0;
+		        int currMax = 0;
+		        
+		        for(int i = 0 ; i < nums.length ; i++){
+		        	if(nums[i]	==1) 		   
+		        		currMax++;
+		        	else {
+		        		if(currMax > max)
+		        			max = currMax;
+		        		
+		        		currMax = 0;
+		        	}
+		        	System.out.println(i+" "+currMax);
+		        }
+		        if(currMax > max)
+        			max = currMax;
+		        
+		        return max;
+		    }
+			public int findLucky(int[] arr) {
+		        if(arr == null || arr.length == 0)
+		        	return -1;
+		        
+		        Map<Integer,Integer> countMap = new HashMap<Integer,Integer>();
+		        
+		        for(int i = 0 ; i < arr.length;i++) {
+		        	countMap.put(arr[i], countMap.getOrDefault(arr[i], 0)+1);
+		        }
+		        
+		        List<Integer> values = new ArrayList<>(); 
+		        
+		        for(Map.Entry<Integer, Integer> entry:countMap.entrySet()) 
+		        	if(entry.getKey() == entry.getValue())
+		        		values.add(entry.getKey());
+		        
+		        Collections.sort(values,Comparator.reverseOrder());
+		    
+		        
+		        return values.size()>0?values.get(0):-1;
+		    }
+			
+			public int findLengthOfLCIS(int[] nums) {
+		        if (nums == null || nums.length ==0)
+		        	return 0;
+		        
+		        int max = 1 ;
+		        int currMax = 1;
+		        for(int i = 0 ; i <nums.length-1;i++) {
+		        	if(nums[i]<nums[i+1]) {
+		        		if(max < currMax)
+		        			max = currMax;
+		        		
+		        		currMax=1;
+		        	}else 
+		        		currMax++;
+		        	
+		        }
+		        if(max < currMax)
+        			max = currMax;
+		        
+		        return max;
+		    }
+			
+			public int[][] matrixReshape(int[][] nums, int r, int c) {
+		        if(nums == null || nums.length == 0)
+		        	return new int[][] {};
+		        	
+		        if(r*c != nums.length *nums[0].length)
+		        	return nums;
+		        	
+		        int row = 0;
+		        int l = 0;
+		        
+		        int[][] newArr = new int[r][c];
+		        for(int i = 0 ; i < nums.length ; i++) {
+		        	for(int j = 0; j < nums[0].length ; j++) {
+		        		newArr[row][l++] = nums[i][j];
+		        		
+		        		if(l == c) {
+		        			row++;
+		        			l = 0;
+		        		}
+		        	}
+		        }
+		        return newArr;
+		    }
+			
+			public static void findPrimes(int N) {
+				
+				
+				
+			}
+			
 
 			public static void main(String[] args) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
 
-				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("input.txt")));
-				FileWriter fw = new FileWriter(new File("output.txt"));
-				int n = Integer.parseInt(br.readLine());
-				String regex = "<(.+)>(\\w|\\d|\\n|[\\(\\)\\.,-:;\\@\\#\\$\\%\\^&*\[\]\"\'+–\\/\\/\\®\\°\\⁰\\!\\?{}|`~]| )+?</(\\1)>";
-				String test = "qqoNVOmJDG@6IBDZoEmk9337LswEL&TQnLCuR`04XD%1t{G)"
-						+ "Jmi_iNEXKwp&"
-		+ "<iBKMbDGtF4v@coLsF1_LqgTJ3cSp& 3a~I&Q(j0h_w~Vk(oBZCL#vhYY9%c>"
-		+ "<wkjkTvAuA8Zk}n_l7Si\"-pfm`M8YE3F}4`YQyChgC3uRbyTvu>"
-		+ "bMUGux)5n7L={M}e^`0xlSm5ce}ehiE}CJ6y0KPd~~B~ak5$PTdPGv}QnXpw6n9V8wVCVaTRTgLKkeF</wkjkTvAuA8Zk}n_l7Si\"-pfm`M8YE3F}4`YQyChgC3uRbyTvu>haZQKlWPxlRqXXkKHo=FDofc6$_S-GWA&m0zT*D~uorf_nAF^ym*U&6hGAI)s<XshvNhnnNbeVDuxRcQAgTpWZ-kqIps-@@}Uwq0J3Z06Y5mZgB9><FbTSC#F104{py9Xl6s{yi-R~}k5Fv4i1kCgmBY7P=vVj-j48xUg8x9BCxl~Y><lyxRRMqnMBGj1_d7Qqh5Ebn7 aMb{Q0Dm){9~I0DTS8BZ7+bui~)rQ\"2Yb4f>EeZWvJvHIk</XshvNhnnNbeVDuxRcQAgTpWZ-kqIps-@@}Uwq0J3Z06Y5mZgB9><BkkZV631Pnj}#%TWhZn@Y><kXjDpTvLA^tnXYb`h+cA J2";
-				for(int i=1;i<=n;i++){
-					String str = br.readLine();
-					Pattern pattern = Pattern.compile(regex);
-					Matcher m = pattern.matcher(str);
-					if(m.find()){
-						fw.append(m.group(2)+"\n");
-						System.out.println(m.group(2));
-					}
-					else{
-						fw.append("None\n");
-						System.out.println("None");
-					}
-					while(m.find()){
-						fw.append(m.group(2)+"\n");
-						System.out.println(m.group(2));
-					}
-				}
+				List<Character> test = new ArrayList<Character>();
+				
+				String s = "test";
+				System.out.println(String.join(",", Arrays.copyOfRange(s.split(""),1,3)));
+				Arrays.stream(s.split("")).forEach(c->test.add(c.charAt(0)));
+				 
+				
+				System.out.println(test);
+				
+				LeetCode code = new LeetCode();
+				code.findMaxConsecutiveOnes(new int[] {1,0,1,1,0,1});
+				System.out.println(code.longestCommonPrefix(new String[] {"","xab","abc"}));
+				
+				code.romanToInt("C");
+				code.romanToInt("XI");
+				code.romanToInt("MCMXCIV");
+		/*
+		 * BufferedReader br = new BufferedReader(new InputStreamReader(new
+		 * FileInputStream("input.txt"))); FileWriter fw = new FileWriter(new
+		 * File("output.txt")); int n = Integer.parseInt(br.readLine());
+		 * 
+		 * String regex =
+		 * "<(.+)>(\\w|\\d|\\n|[\\(\\)\\.,-:;\\@\\#\\$\\%\\^&*\[\]\"\'+â€“\\/\\/\\Â®\\Â°\\â�°\\!\\?{}|`~]| )+?</(\\1)>"
+		 * ; String test = "qqoNVOmJDG@6IBDZoEmk9337LswEL&TQnLCuR`04XD%1t{G)" +
+		 * "Jmi_iNEXKwp&" +
+		 * "<iBKMbDGtF4v@coLsF1_LqgTJ3cSp& 3a~I&Q(j0h_w~Vk(oBZCL#vhYY9%c>" +
+		 * "<wkjkTvAuA8Zk}n_l7Si\"-pfm`M8YE3F}4`YQyChgC3uRbyTvu>" +
+		 * "bMUGux)5n7L={M}e^`0xlSm5ce}ehiE}CJ6y0KPd~~B~ak5$PTdPGv}QnXpw6n9V8wVCVaTRTgLKkeF</wkjkTvAuA8Zk}n_l7Si\"-pfm`M8YE3F}4`YQyChgC3uRbyTvu>haZQKlWPxlRqXXkKHo=FDofc6$_S-GWA&m0zT*D~uorf_nAF^ym*U&6hGAI)s<XshvNhnnNbeVDuxRcQAgTpWZ-kqIps-@@}Uwq0J3Z06Y5mZgB9><FbTSC#F104{py9Xl6s{yi-R~}k5Fv4i1kCgmBY7P=vVj-j48xUg8x9BCxl~Y><lyxRRMqnMBGj1_d7Qqh5Ebn7 aMb{Q0Dm){9~I0DTS8BZ7+bui~)rQ\"2Yb4f>EeZWvJvHIk</XshvNhnnNbeVDuxRcQAgTpWZ-kqIps-@@}Uwq0J3Z06Y5mZgB9><BkkZV631Pnj}#%TWhZn@Y><kXjDpTvLA^tnXYb`h+cA J2"
+		 * ; for(int i=1;i<=n;i++){ String str = br.readLine(); Pattern pattern =
+		 * Pattern.compile(regex); Matcher m = pattern.matcher(str); if(m.find()){
+		 * fw.append(m.group(2)+"\n"); System.out.println(m.group(2)); } else{
+		 * fw.append("None\n"); System.out.println("None"); } while(m.find()){
+		 * fw.append(m.group(2)+"\n"); System.out.println(m.group(2)); } }
+		 */
+		 
 
 				/*String regex = "^[[A-Z]|[a-z]][[A-Z]|[a-z]|\\d|[_]]{7,29}$";
 				BigInteger bi = new BigInteger("134");
@@ -3026,11 +3187,11 @@ public class LeetCode {
 				nf = NumberFormat.getInstance(Locale.CHINA);
 				nf.setMinimumFractionDigits(2);
 				nf.setMaximumFractionDigits(2);
-				System.out.println("China: ￥"+nf.format(payment));
+				System.out.println("China: ï¿¥"+nf.format(payment));
 				nf = NumberFormat.getInstance(Locale.FRANCE);
 				nf.setMinimumFractionDigits(2);
 				nf.setMaximumFractionDigits(2);
-				System.out.println("France: "+nf.format(payment)+" €");
+				System.out.println("France: "+nf.format(payment)+" â‚¬");
 
 				/*Scanner in = new Scanner(System.in);
 		        int t=in.nextInt();
