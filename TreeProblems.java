@@ -828,6 +828,40 @@ public class TreeProblems {
 		
 		
     }
+	class Index { 
+		  
+	    int index = 0; 
+	}
+	Index index = new Index();
+	
+	TreeNode constructTreeUtil(int preOrder[], Index preIndex, int key, 
+            int min, int max, int size) { 
+  
+        if (preIndex.index >= size) 
+            return null; 
+  
+        TreeNode root = null; 
+        if (key > min && key < max) { 
+            root = new TreeNode(key); 
+            preIndex.index = preIndex.index + 1; 
+            System.out.println(preIndex.index+"-->"+key+"-size="+size);
+            if (preIndex.index < size)
+                root.left = constructTreeUtil(preOrder, preIndex,  
+                            preOrder[preIndex.index], min, key, size);
+            
+            if (preIndex.index < size)
+                root.right = constructTreeUtil(preOrder, preIndex,  
+                             preOrder[preIndex.index], key, max, size);  
+        } 
+  
+        return root; 
+    }
+	
+	public TreeNode bstFromPreorder(int[] preorder) {
+        return constructTreeUtil(preorder, index, preorder[0], Integer.MIN_VALUE, 
+                Integer.MAX_VALUE, preorder.length); 
+    }
+	
 	
 	public static void main(String...strings){
 		TreeProblems treeProblems = new TreeProblems();
@@ -864,7 +898,9 @@ public class TreeProblems {
 		root = treeProblems.insertIntoBST(root, 11);
 		root = treeProblems.insertIntoBST(root, 9);
 		
-		System.out.println(treeProblems.levelOrder(root));
+		//System.out.println(treeProblems.levelOrder(root));
+		
+		treeProblems.bstFromPreorder(new int[] {4,2});
 		
 		/*
 		System.out.println(treeProblems.inOrderIterative(root));

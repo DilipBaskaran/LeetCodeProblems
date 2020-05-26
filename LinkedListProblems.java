@@ -3,11 +3,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.compress.utils.Lists;
 
 
 public class LinkedListProblems {
-
 	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
 		int rem = 0 ;
@@ -410,6 +408,38 @@ public class LinkedListProblems {
         }
         
         return res;
+    }
+	
+public ListNode oddEvenList(ListNode head) {
+        
+        if(head == null)
+            return null;
+        
+        ListNode odd = head;
+        ListNode even = head.next;
+        
+        ListNode evenFirst = even;
+        
+        while(true){
+            
+            if(odd == null || even == null || even.next == null){
+                odd.next = evenFirst;
+                break;
+            }
+            
+            odd.next = even.next;
+            odd = even.next;
+            
+            if(odd.next == null){
+                even.next = null;
+                odd.next = evenFirst;
+                break;
+            }
+            
+            even.next = odd.next;
+            even = even.next;
+        }
+        return head;
     }
 
 	public static void main(String[] args) {
