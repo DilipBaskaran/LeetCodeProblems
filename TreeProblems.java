@@ -213,12 +213,10 @@ public class TreeProblems {
 			return 0;
 		int heightLeft = minHeight(node.left);
 		int heightRight = minHeight(node.right);
-		if(node.left == null && node.right==null)
-			return heightLeft<heightRight?heightLeft+1:heightRight+1;
-		else if(node.left == null || node.right==null)
-			return heightLeft<heightRight?heightLeft+2:heightRight+2;
-		else
-			return height(node);
+	
+		return heightLeft<heightRight?heightLeft+1:heightRight+1;
+		
+		
 	}
 	public int minDepth(TreeNode node) {
 		return minHeight(node);
@@ -863,9 +861,69 @@ public class TreeProblems {
     }
 	
 	
+	public TreeNode constructMaximumBinaryTree(int[] nums) {
+        //return construct(nums,0,nums.length);
+		return constructMaxBT(nums);
+    }
+    private TreeNode construct(int[] nums, int left, int right){
+        
+        if(left == right)
+            return null;
+        
+        int maxIndex = left;
+        System.out.println(left+"<-->"+right);
+        for(int i =left+1;i<right;i++)
+            maxIndex = nums[maxIndex]<nums[i]?i:maxIndex;
+        
+        TreeNode node = new TreeNode(nums[maxIndex]);
+        System.out.println(maxIndex+"-"+nums[maxIndex]);
+        node.left = construct(nums,left, maxIndex);
+        node.right = construct(nums, maxIndex+1,right);
+        
+        return node;
+    }
+    
+    private TreeNode constructMaxBT(int[] nums) {
+    	
+    	int length = nums.length;
+    	Stack<TreeNode> stack = new Stack<TreeNode>();
+    	for(int i=0;i<length;i++) {
+    		TreeNode curr = new TreeNode(nums[i]);
+    		while(!stack.isEmpty() && stack.peek().val < curr.val)
+    			curr.left = stack.pop();
+    		
+    		if(!stack.empty())
+    			stack.peek().right = curr;
+    		
+    		stack.push(curr);
+    	}
+    	
+    	TreeNode ans = null;
+    	
+    	while(!stack.isEmpty())
+    		ans = stack.pop();
+    	
+    	return ans;
+    }
+    
+    public int diameterOfBinaryTree(TreeNode root){ 
+       if (root == null) 
+            return 0; 
+  
+        int lheight = height(root.left); 
+        int rheight = height(root.right); 
+  
+        int ldiameter = diameterOfBinaryTree(root.left); 
+        int rdiameter = diameterOfBinaryTree(root.right); 
+  
+        return Math.max(lheight + rheight + 1, 
+                        Math.max(ldiameter, rdiameter)); 
+    }	
+	
 	public static void main(String...strings){
 		TreeProblems treeProblems = new TreeProblems();
 		
+		treeProblems.constructMaximumBinaryTree(new int[] {3,2,1,6,0,5});
 		
 		TreeNode root = new TreeNode(5);
 
@@ -874,7 +932,7 @@ public class TreeProblems {
 		TreeNode right = new TreeNode(8);
 		root.right = right;
 
-
+		
 		left = new TreeNode(1);
 		root.left.left = left;
 		root.left.left.left=null;
@@ -897,6 +955,8 @@ public class TreeProblems {
 		
 		root = treeProblems.insertIntoBST(root, 11);
 		root = treeProblems.insertIntoBST(root, 9);
+		
+		System.out.println(treeProblems.minHeight(root));
 		
 		//System.out.println(treeProblems.levelOrder(root));
 		

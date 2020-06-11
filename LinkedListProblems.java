@@ -442,6 +442,26 @@ public ListNode oddEvenList(ListNode head) {
         return head;
     }
 
+	public ListNode middleNode(ListNode head) {
+		
+		if(head == null)
+			return head;
+		
+		ListNode nextNode = head.next;
+		
+		while(nextNode != null) {
+			head = head.next;
+			
+			if(nextNode.next != null)
+				nextNode = nextNode.next.next;
+			else
+				nextNode = nextNode.next;
+			
+		}
+		
+		return head;
+	}
+
 	public static void main(String[] args) {
 
 
