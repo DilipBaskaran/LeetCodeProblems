@@ -4693,12 +4693,39 @@ public class LeetCode {
 		}
 		
     }
+	
+	public void sortColors(int[] nums) {
+		if(nums == null) return;
+		int len = nums.length;
+		
+		if(len == 0 || len ==1) return;
+		
+		int start = 0, end = len-1,index = 0;
+		
+		while(index <= end &&  start<end) {
+			if(nums[index] == 0) {
+				nums[index ] = nums[start];
+				nums[start] = 0;
+				start++;
+				index++;
+			}else if(nums[index] == 2) {
+				nums[index ] = nums[end];
+				nums[end] = 2;
+				end--;
+			}else
+				index++;
+		}
+    }
 
 	public static void main(String[] args) throws NoSuchMethodException, SecurityException, InstantiationException,
 	IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
 		LeetCode code = new LeetCode();
 
-		System.out.println(code.searchInsert(new int[] {1,2,2,2,2,2,3,4},2));
+		int[] arr = {2,0,1,2,0,1,2};
+		code.sortColors(arr);
+		System.out.println(Arrays.toString(arr));
+		
+		//System.out.println(code.searchInsert(new int[] {1,2,2,2,2,2,3,4},2));
 		
 		//System.out.println(code.lastStoneWeight(new int[] {2,7,4,1,8,1}));
 		
