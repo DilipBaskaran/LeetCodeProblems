@@ -4716,14 +4716,107 @@ public class LeetCode {
 				index++;
 		}
     }
+	
+	class RandomizedSet {
+		
+		private List<Integer> dataSet;
+		private int size ;
+	    /** Initialize your data structure here. */
+	    public RandomizedSet() {
+	        dataSet = new ArrayList<Integer>();
+	        size = 0;
+	    }
+	    
+	    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+	    public boolean insert(int val) {
+	    	if(dataSet.contains(val))
+	    		return false;
+	    	size+=1;
+	        return dataSet.add(val);
+	    }
+	    
+	    /** Removes a value from the set. Returns true if the set contained the specified element. */
+	    public boolean remove(int val) {
+	    	
+	        boolean res = dataSet.remove(new Integer(val));
+	        if(res)
+	        	size-=1;
+	        
+	        return res;
+	    }
+	    
+	    /** Get a random element from the set. */
+	    public int getRandom() {
+	        return dataSet.get((int)(Math.random()*size));
+	    }
+	}
+	
+	public List<Integer> largestDivisibleSubset(int[] arr) {
+		
+		int divCount[] = new int[arr.length]; 
+		Arrays.sort(arr);
+        
+        // we will always have atleast one  
+        // element divisible by itself 
+        Arrays.fill(divCount, 1); 
+  
+        // maintain the index of the last increment 
+        int prev[] = new int[arr.length]; 
+        Arrays.fill(prev, -1); 
+  
+        // index at which last increment happened 
+        int max_ind = 0; 
+  
+        for (int i = 1; i < arr.length; i++) { 
+            for (int j = 0; j < i; j++) { 
+  
+                // only increment the maximum index if  
+                // this iteration will increase it 
+                if (arr[i] % arr[j] == 0 &&  
+                    divCount[i] < divCount[j] + 1) { 
+                    prev[i] = j; 
+                    divCount[i] = divCount[j] + 1; 
+                } 
+  
+            } 
+        // Update last index of largest subset if size 
+        // of current subset is more. 
+            if (divCount[i] > divCount[max_ind]) 
+                max_ind = i; 
+        } 
+  
+        List<Integer> resList = new ArrayList<Integer>();
+        int k = max_ind; 
+        while (k >= 0) { 
+            resList.add(0,arr[k]);
+            k = prev[k]; 
+        }
+        return resList;
+    }
 
 	public static void main(String[] args) throws NoSuchMethodException, SecurityException, InstantiationException,
 	IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
+		
 		LeetCode code = new LeetCode();
-
-		int[] arr = {2,0,1,2,0,1,2};
-		code.sortColors(arr);
-		System.out.println(Arrays.toString(arr));
+		
+		System.out.println(code.largestDivisibleSubset(new int[] {16,8,5,4,2,1}));
+		
+		
+		/*
+		 * RandomizedSet obj = code.new RandomizedSet();
+		 * 
+		 * System.out.println(obj.insert(1)); System.out.println(obj.insert(10));
+		 * System.out.println(obj.insert(20)); System.out.println(obj.insert(30));
+		 * System.out.println(obj.getRandom()); System.out.println(obj.getRandom());
+		 * System.out.println(obj.getRandom()); System.out.println(obj.getRandom());
+		 * System.out.println(obj.getRandom());
+		 */
+		
+		
+		/*
+		 * int[] arr = {2,0,1,2,0,1,2}; code.sortColors(arr);
+		 * System.out.println(Arrays.toString(arr));
+		 */
 		
 		//System.out.println(code.searchInsert(new int[] {1,2,2,2,2,2,3,4},2));
 		
